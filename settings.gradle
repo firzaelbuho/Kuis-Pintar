@@ -1,0 +1,2 @@
+rootProject.name='kuispintar'
+include ':app'
