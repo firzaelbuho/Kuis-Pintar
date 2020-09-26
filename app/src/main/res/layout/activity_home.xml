@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/adTest" />
+            ads:adUnitId="@string/adBaner" />
     </LinearLayout>
 
 
