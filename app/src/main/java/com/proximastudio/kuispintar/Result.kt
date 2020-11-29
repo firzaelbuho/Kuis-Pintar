@@ -3,7 +3,7 @@ package com.proximastudio.kuispintar
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.proximastudio.kuispintar.db.Db
+import com.proximastudio.kuispintar.model.Db
 import kotlinx.android.synthetic.main.activity_result.*
 
 class Result : AppCompatActivity() {

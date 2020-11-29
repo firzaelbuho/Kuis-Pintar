@@ -7,12 +7,13 @@ import android.os.CountDownTimer
 import android.widget.Button
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
-import com.proximastudio.kuispintar.db.Db
+import com.proximastudio.kuispintar.model.Db
+import com.proximastudio.kuispintar.model.QuestionSet
 import kotlinx.android.synthetic.main.activity_start.*
 
 class Start : AppCompatActivity() {
 
-    var setSoal : MutableList<Soal> = mutableListOf()
+    var setSoal : MutableList<QuestionSet> = mutableListOf()
     var soalMax = 0
     var soalCount = 0
     var key = "x"
@@ -31,6 +32,12 @@ class Start : AppCompatActivity() {
 
         // check mode
 
+        setup()
+
+
+    }
+
+    private fun setup() {
         if(isClassic){
             soalMax = 10
             var category = Db.category
@@ -42,13 +49,13 @@ class Start : AppCompatActivity() {
 
             }
         }else{
-            soalMax = Db.soal.size
+            soalMax = (Db.questionList.size)
             addSoalAll()
         }
 
         // shuffle soal
 
-        setSoal = setSoal.shuffled() as MutableList<Soal>
+        setSoal = setSoal.shuffled() as MutableList<QuestionSet>
 
         // start quiz
 
@@ -58,25 +65,25 @@ class Start : AppCompatActivity() {
         // btn clicklistener
 
         btnNext.setOnClickListener {
-         if(soalCount >= soalMax){
+            if(soalCount >= soalMax){
 
-             // move to result
-             Db.score = scoreCount
-             startActivity(Intent(this, Result::class.java))
+                // move to result
+                Db.score = scoreCount
+                startActivity(Intent(this, Result::class.java))
 
-         }else if(!isClassic && isWrong){
+            }else if(!isClassic && isWrong){
 
-             // move to result
-             Db.score = scoreCount
-             startActivity(Intent(this, Result::class.java))
+                // move to result
+                Db.score = scoreCount
+                startActivity(Intent(this, Result::class.java))
 
-         }else{
+            }else{
 
-             btnIsEnabled(true)
-             resetBtn()
-             startQuiz(soalCount)
+                btnIsEnabled(true)
+                resetBtn()
+                startQuiz(soalCount)
 
-         }
+            }
 
         }
 
@@ -95,10 +102,7 @@ class Start : AppCompatActivity() {
         btnE.setOnClickListener{
             checkAnswer(btnE , "e")
         }
-
-
     }
-
 
 
     fun startQuiz(indexSoal : Int){
@@ -127,12 +131,12 @@ class Start : AppCompatActivity() {
 
 
         nomor.text = "${indexSoal+1}"
-        soal.text = setSoal.get(indexSoal).textSoal
-        btnA.text = setSoal.get(indexSoal).optA
-        btnB.text = setSoal.get(indexSoal).optB
-        btnC.text = setSoal.get(indexSoal).optC
-        btnD.text = setSoal.get(indexSoal).optD
-        btnE.text = setSoal.get(indexSoal).optE
+        soal.text = setSoal.get(indexSoal).question
+        btnA.text = setSoal.get(indexSoal).opta
+        btnB.text = setSoal.get(indexSoal).optb
+        btnC.text = setSoal.get(indexSoal).optc
+        btnD.text = setSoal.get(indexSoal).optd
+        btnE.text = setSoal.get(indexSoal).opte
         key = setSoal.get(indexSoal).key
 
 
@@ -141,24 +145,11 @@ class Start : AppCompatActivity() {
     }
 
     fun addSoal(category : String) {
-        for (i in 0 until Db.soal.size) {
+        for (i in 0 until Db.questionList.size) {
 
-            if (Db.soal.get(i).get(7).equals(category)) {
+            if (Db.questionList.get(i).cat.equals(category)) {
 
-                setSoal.add(
-                    Soal(
-                        Db.soal.get(i).get(0),
-                        Db.soal.get(i).get(1),
-                        Db.soal.get(i).get(2),
-                        Db.soal.get(i).get(3),
-                        Db.soal.get(i).get(4),
-                        Db.soal.get(i).get(5),
-                        Db.soal.get(i).get(6),
-                        Db.soal.get(i).get(7)
-                    )
-                )
-
-
+                setSoal.add(Db.questionList.get(i))
             }
         }
     }
@@ -221,19 +212,8 @@ class Start : AppCompatActivity() {
     }
 
     fun addSoalAll(){
-        for(i in 0 until Db.soal.size){
-            setSoal.add(Soal(
-                Db.soal.get(i).get(0),
-                Db.soal.get(i).get(1),
-                Db.soal.get(i).get(2),
-                Db.soal.get(i).get(3),
-                Db.soal.get(i).get(4),
-                Db.soal.get(i).get(5),
-                Db.soal.get(i).get(6),
-                Db.soal.get(i).get(7)
-
-            ))
-        }
+        setSoal = Db.questionList!! as MutableList<QuestionSet>
     }
-
 }
+
+
