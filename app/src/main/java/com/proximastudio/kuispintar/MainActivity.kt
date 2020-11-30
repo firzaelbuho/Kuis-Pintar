@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import com.proximastudio.kuispintar.model.DataRepository
 import com.proximastudio.kuispintar.model.Db
 import com.proximastudio.kuispintar.model.QuestionSet
@@ -24,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         getData()
 
+    }
+
+    private fun setSplash() {
         Handler().postDelayed({
             // This method will be executed once the timer is over
             // Start your app main activity
@@ -50,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                     if (data != null) {
 
                         Db.questionList = data
-                        // Log.d("tag",data.toString())
+                        setSplash()
                     }
 
 
@@ -61,9 +65,28 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<List<QuestionSet>>, error: Throwable) {
                 Log.e("tag", "errornya ${error.message}")
+                showAlert()
             }
 
 
         })
+    }
+
+    private fun showAlert() {
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setTitle("Koneksi Gagal")
+        builder.setMessage("Pastikan perangkat anda terhubung ke jaringan internet. coba lagi ?")
+        //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+
+        builder.setPositiveButton("ya") { dialog, which ->
+            getData()
+        }
+
+        builder.setNegativeButton("batal") { dialog, which ->
+            finish()
+        }
+
+
+        builder.show()
     }
 }
